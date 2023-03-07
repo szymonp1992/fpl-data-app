@@ -1,18 +1,72 @@
 <template>
-  <ul>
-    <li v-for="team in teamsList" :key="team.id">
-      Name: {{ team.name }}, xG: {{ team.xG }}
-    </li>
-  </ul>
+  <div class="container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" @click="sortColumn('name')">Team</th>
+          <th scope="col" @click="sortColumn('strength')">Strength</th>
+          <th scope="col" @click="sortColumn('xG')">xG</th>
+          <th scope="col" @click="sortColumn('xGA')">xGA</th>
+          <th scope="col" @click="sortColumn('xGD')">xGD</th>
+          <th scope="col" @click="sortColumn('npxG')">npxG</th>
+          <th scope="col" @click="sortColumn('npxGA')">npxGA</th>
+          <th scope="col" @click="sortColumn('last5xG')">xG - last 5</th>
+          <th scope="col" @click="sortColumn('last5xGA')">xGA - last 5</th>
+          <th scope="col" @click="sortColumn('last5xGD')">xGD - last 5</th>
+          <th scope="col" @click="sortColumn('last5npxG')">npxG - last 5</th>
+          <th scope="col" @click="sortColumn('last5npxGA')">npxGA - last 5</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="team in sortedTeams" :key="team.id">
+          <td>{{ team.name }}</td>
+          <td>{{ team.strength }}</td>
+          <td>{{ team.xG }}</td>
+          <td>{{ team.xGA }}</td>
+          <td>{{ team.xGD }}</td>
+          <td>{{ team.npxG }}</td>
+          <td>{{ team.npxGA }}</td>
+          <td>{{ team.last5xG }}</td>
+          <td>{{ team.last5xGA }}</td>
+          <td>{{ team.last5xGD }}</td>
+          <td>{{ team.last5npxG }}</td>
+          <td>{{ team.last5npxGA }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 export default {
   setup() {
     // Variable keeping an array of team objects with all the statistics needed for this page
     const teamsList = ref([]);
+
+    // Variables keeping track of what column are we sorting and in which direction
+    const currentSort = ref("name");
+    const currentSortDir = ref("asc");
+
+    // Function to recognize when we are sorting by the same column and flip direction
+    function sortColumn(s) {
+      //if s == current sort, reverse
+      if (s === currentSort.value) {
+        currentSortDir.value = currentSortDir.value === "asc" ? "desc" : "asc";
+      }
+      currentSort.value = s;
+    }
+
+    const sortedTeams = computed(() => {
+      return teamsList.value.sort((a, b) => {
+        let modifier = 1;
+        if (currentSortDir.value === "desc") modifier = -1;
+        if (a[currentSort.value] < b[currentSort.value]) return -1 * modifier;
+        if (a[currentSort.value] > b[currentSort.value]) return 1 * modifier;
+        return 0;
+      });
+    });
 
     // Sorter function for teams' names in array of objects from FPL API
     function sortFPLAlphabetically(a, b) {
@@ -82,7 +136,7 @@ export default {
         }
         // Loop adding all the single game statistics for last 5 games to create a sum
         for (
-          let i = teamUnderstatIterated.history.length - 6;
+          let i = teamUnderstatIterated.history.length - 5;
           i < teamUnderstatIterated.history.length;
           i++
         ) {
@@ -124,6 +178,7 @@ export default {
         last5xGD = 0;
       }
       // Uploading teamsList array - it is no longer empty, now it is filled with all the teams data
+      console.log(teamsArray);
       teamsList.value = teamsArray;
     }
 
@@ -132,7 +187,14 @@ export default {
       await loadTeamsData();
     });
 
-    return { teamsList };
+    return { teamsList, sortedTeams, sortColumn };
   },
 };
 </script>
+
+<style scoped>
+td,
+th {
+  text-align: center;
+}
+</style>

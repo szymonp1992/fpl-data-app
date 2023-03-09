@@ -20,17 +20,36 @@
       <tbody>
         <tr v-for="team in sortedTeams" :key="team.id">
           <td>{{ team.name }}</td>
-          <td>{{ team.strength }}</td>
-          <td>{{ team.xG }}</td>
-          <td>{{ team.xGA }}</td>
-          <td>{{ team.xGD }}</td>
-          <td>{{ team.npxG }}</td>
-          <td>{{ team.npxGA }}</td>
-          <td>{{ team.last5xG }}</td>
-          <td>{{ team.last5xGA }}</td>
-          <td>{{ team.last5xGD }}</td>
-          <td>{{ team.last5npxG }}</td>
-          <td>{{ team.last5npxGA }}</td>
+          <td
+            :class="{
+              green: team.strength === 5,
+              lightgreen: team.strength === 4,
+              yellow: team.strength === 3,
+              orange: team.strength === 2,
+            }"
+          >
+            {{ team.strength }}
+          </td>
+          <td :class="colorCells('xG', team.xG)">{{ team.xG }}</td>
+          <td :class="colorCells('xGA', team.xGA)">{{ team.xGA }}</td>
+          <td :class="colorCells('xGD', team.xGD)">{{ team.xGD }}</td>
+          <td :class="colorCells('npxG', team.npxG)">{{ team.npxG }}</td>
+          <td :class="colorCells('npxGA', team.npxGA)">{{ team.npxGA }}</td>
+          <td :class="colorCells('last5xG', team.last5xG)">
+            {{ team.last5xG }}
+          </td>
+          <td :class="colorCells('last5xGA', team.last5xGA)">
+            {{ team.last5xGA }}
+          </td>
+          <td :class="colorCells('last5xGD', team.last5xGD)">
+            {{ team.last5xGD }}
+          </td>
+          <td :class="colorCells('last5npxG', team.last5npxG)">
+            {{ team.last5npxG }}
+          </td>
+          <td :class="colorCells('last5npxGA', team.last5npxGA)">
+            {{ team.last5npxGA }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -62,7 +81,6 @@ export default {
       return teamsList.value.sort((a, b) => {
         let modifier = 1;
         if (currentSortDir.value === "desc") modifier = -1;
-        console.log(currentSort.value);
         if (currentSort.value == "name") {
           if (a[currentSort.value] < b[currentSort.value]) return -1 * modifier;
           if (a[currentSort.value] > b[currentSort.value]) return 1 * modifier;
@@ -101,6 +119,38 @@ export default {
         return 1;
       }
       return 0;
+    }
+
+    // Sorter for values in the table enabling colorCells function to get arrays of all values in a column
+    function sortValues(prop) {
+      const arr = [];
+      sortedTeams.value.forEach((team) => {
+        arr.push(team[prop]);
+      });
+      arr.sort(function (a, b) {
+        return b - a;
+      });
+      return arr;
+    }
+
+    // Function that colors cells according to how high the value is. 4 best get the green, 4 worst - red. In between - steps 4 at a time
+    function colorCells(prop, value) {
+      const arrayOfValues = sortValues(prop);
+      if (arrayOfValues.indexOf(value) < 4) {
+        return "green";
+      }
+      if (arrayOfValues.indexOf(value) < 8) {
+        return "lightgreen";
+      }
+      if (arrayOfValues.indexOf(value) < 12) {
+        return "yellow";
+      }
+      if (arrayOfValues.indexOf(value) < 16) {
+        return "orange";
+      }
+      if (arrayOfValues.indexOf(value) < 20) {
+        return "red";
+      }
     }
 
     // Asynchronous function loading all teams data from both APIs
@@ -197,9 +247,10 @@ export default {
     // onMounted we launch loadTeamsData function and we wait for the result that will be displayed with a v-for directive as a list
     onMounted(async () => {
       await loadTeamsData();
+      sortValues("xG");
     });
 
-    return { teamsList, sortedTeams, sortColumn };
+    return { teamsList, sortedTeams, sortColumn, colorCells };
   },
 };
 </script>
@@ -208,5 +259,21 @@ export default {
 td,
 th {
   text-align: center;
+}
+
+.green {
+  background-color: green;
+}
+.red {
+  background-color: red;
+}
+.yellow {
+  background-color: yellow;
+}
+.lightgreen {
+  background-color: lightgreen;
+}
+.orange {
+  background-color: orange;
 }
 </style>

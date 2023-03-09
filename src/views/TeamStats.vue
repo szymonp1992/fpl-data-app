@@ -62,9 +62,22 @@ export default {
       return teamsList.value.sort((a, b) => {
         let modifier = 1;
         if (currentSortDir.value === "desc") modifier = -1;
-        if (a[currentSort.value] < b[currentSort.value]) return -1 * modifier;
-        if (a[currentSort.value] > b[currentSort.value]) return 1 * modifier;
-        return 0;
+        console.log(currentSort.value);
+        if (currentSort.value == "name") {
+          if (a[currentSort.value] < b[currentSort.value]) return -1 * modifier;
+          if (a[currentSort.value] > b[currentSort.value]) return 1 * modifier;
+          return 0;
+        } else {
+          if (
+            parseFloat(a[currentSort.value]) < parseFloat(b[currentSort.value])
+          )
+            return -1 * modifier;
+          if (
+            parseFloat(a[currentSort.value]) > parseFloat(b[currentSort.value])
+          )
+            return 1 * modifier;
+          return 0;
+        }
       });
     });
 
@@ -178,7 +191,6 @@ export default {
         last5xGD = 0;
       }
       // Uploading teamsList array - it is no longer empty, now it is filled with all the teams data
-      console.log(teamsArray);
       teamsList.value = teamsArray;
     }
 

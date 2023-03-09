@@ -1,6 +1,6 @@
 <template>
   <div>
-    <RouterLink to="/">Fixture ticker</RouterLink>
+    <RouterLink to="/">Team stats</RouterLink>
     <RouterLink to="/">Free Hit Creator</RouterLink>
     <RouterLink to="/">Best Goalkeepers</RouterLink>
     <RouterLink to="/">Best Defenders</RouterLink>

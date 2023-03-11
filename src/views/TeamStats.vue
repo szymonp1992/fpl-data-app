@@ -1,20 +1,104 @@
 <template>
-  <div class="container">
-    <table class="table table-striped">
+  <div class="container mt-4">
+    <table class="table table-striped table-bordered border-light teams-table">
       <thead>
-        <tr>
-          <th scope="col" @click="sortColumn('name')">Team</th>
-          <th scope="col" @click="sortColumn('strength')">Strength</th>
-          <th scope="col" @click="sortColumn('xG')">xG</th>
-          <th scope="col" @click="sortColumn('xGA')">xGA</th>
-          <th scope="col" @click="sortColumn('xGD')">xGD</th>
-          <th scope="col" @click="sortColumn('npxG')">npxG</th>
-          <th scope="col" @click="sortColumn('npxGA')">npxGA</th>
-          <th scope="col" @click="sortColumn('last5xG')">xG - last 5</th>
-          <th scope="col" @click="sortColumn('last5xGA')">xGA - last 5</th>
-          <th scope="col" @click="sortColumn('last5xGD')">xGD - last 5</th>
-          <th scope="col" @click="sortColumn('last5npxG')">npxG - last 5</th>
-          <th scope="col" @click="sortColumn('last5npxGA')">npxGA - last 5</th>
+        <tr class="table-secondary">
+          <th
+            scope="col"
+            @click="sortColumn('name')"
+            id="name-header"
+            :class="activeHeader === 'name-header' ? 'active-header' : ''"
+          >
+            Team
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('strength')"
+            id="strength-header"
+            :class="activeHeader === 'strength-header' ? 'active-header' : ''"
+          >
+            Strength
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('xG')"
+            id="xg-header"
+            :class="activeHeader === 'xg-header' ? 'active-header' : ''"
+          >
+            xG
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('xGA')"
+            id="xga-header"
+            :class="activeHeader === 'xga-header' ? 'active-header' : ''"
+          >
+            xGA
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('xGD')"
+            id="xgd-header"
+            :class="activeHeader === 'xgd-header' ? 'active-header' : ''"
+          >
+            xGD
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('npxG')"
+            id="npxg-header"
+            :class="activeHeader === 'npxg-header' ? 'active-header' : ''"
+          >
+            npxG
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('npxGA')"
+            id="npxga-header"
+            :class="activeHeader === 'npxga-header' ? 'active-header' : ''"
+          >
+            npxGA
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('last5xG')"
+            id="last5xg-header"
+            :class="activeHeader === 'last5xg-header' ? 'active-header' : ''"
+          >
+            xG - last 5
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('last5xGA')"
+            id="last5xga-header"
+            :class="activeHeader === 'last5xga-header' ? 'active-header' : ''"
+          >
+            xGA - last 5
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('last5xGD')"
+            id="last5xgd-header"
+            :class="activeHeader === 'last5xgd-header' ? 'active-header' : ''"
+          >
+            xGD - last 5
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('last5npxG')"
+            id="last5npxg-header"
+            :class="activeHeader === 'last5npxg-header' ? 'active-header' : ''"
+          >
+            npxG - last 5
+          </th>
+          <th
+            scope="col"
+            @click="sortColumn('last5npxGA')"
+            id="last5npxga-header"
+            :class="activeHeader === 'last5npxga-header' ? 'active-header' : ''"
+          >
+            npxGA - last 5
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -30,24 +114,28 @@
           >
             {{ team.strength }}
           </td>
-          <td :class="colorCells('xG', team.xG)">{{ team.xG }}</td>
-          <td :class="colorCells('xGA', team.xGA)">{{ team.xGA }}</td>
-          <td :class="colorCells('xGD', team.xGD)">{{ team.xGD }}</td>
-          <td :class="colorCells('npxG', team.npxG)">{{ team.npxG }}</td>
-          <td :class="colorCells('npxGA', team.npxGA)">{{ team.npxGA }}</td>
-          <td :class="colorCells('last5xG', team.last5xG)">
+          <td :class="colorCells('xG', team.xG, 'desc')">{{ team.xG }}</td>
+          <td :class="colorCells('xGA', team.xGA, 'asc')">{{ team.xGA }}</td>
+          <td :class="colorCells('xGD', team.xGD, 'desc')">{{ team.xGD }}</td>
+          <td :class="colorCells('npxG', team.npxG, 'desc')">
+            {{ team.npxG }}
+          </td>
+          <td :class="colorCells('npxGA', team.npxGA, 'asc')">
+            {{ team.npxGA }}
+          </td>
+          <td :class="colorCells('last5xG', team.last5xG, 'desc')">
             {{ team.last5xG }}
           </td>
-          <td :class="colorCells('last5xGA', team.last5xGA)">
+          <td :class="colorCells('last5xGA', team.last5xGA, 'asc')">
             {{ team.last5xGA }}
           </td>
-          <td :class="colorCells('last5xGD', team.last5xGD)">
+          <td :class="colorCells('last5xGD', team.last5xGD, 'desc')">
             {{ team.last5xGD }}
           </td>
-          <td :class="colorCells('last5npxG', team.last5npxG)">
+          <td :class="colorCells('last5npxG', team.last5npxG, 'desc')">
             {{ team.last5npxG }}
           </td>
-          <td :class="colorCells('last5npxGA', team.last5npxGA)">
+          <td :class="colorCells('last5npxGA', team.last5npxGA, 'asc')">
             {{ team.last5npxGA }}
           </td>
         </tr>
@@ -66,16 +154,10 @@ export default {
 
     // Variables keeping track of what column are we sorting and in which direction
     const currentSort = ref("name");
-    const currentSortDir = ref("asc");
+    const currentSortDir = ref("desc");
 
-    // Function to recognize when we are sorting by the same column and flip direction
-    function sortColumn(s) {
-      //if s == current sort, reverse
-      if (s === currentSort.value) {
-        currentSortDir.value = currentSortDir.value === "asc" ? "desc" : "asc";
-      }
-      currentSort.value = s;
-    }
+    // Active header name to be updated to show which column dictates the sorting
+    const activeHeader = ref("name-header");
 
     const sortedTeams = computed(() => {
       return teamsList.value.sort((a, b) => {
@@ -98,6 +180,16 @@ export default {
         }
       });
     });
+
+    // Function to recognize when we are sorting by the same column and flip direction
+    function sortColumn(s) {
+      //if s == current sort, reverse
+      activeHeader.value = event.target.id;
+      if (s === currentSort.value) {
+        currentSortDir.value = currentSortDir.value === "asc" ? "desc" : "asc";
+      }
+      currentSort.value = s;
+    }
 
     // Sorter function for teams' names in array of objects from FPL API
     function sortFPLAlphabetically(a, b) {
@@ -134,22 +226,38 @@ export default {
     }
 
     // Function that colors cells according to how high the value is. 4 best get the green, 4 worst - red. In between - steps 4 at a time
-    function colorCells(prop, value) {
+    function colorCells(prop, value, order) {
       const arrayOfValues = sortValues(prop);
       if (arrayOfValues.indexOf(value) < 4) {
-        return "green";
+        if (order === "desc") {
+          return "green";
+        } else if (order === "asc") {
+          return "red";
+        }
       }
       if (arrayOfValues.indexOf(value) < 8) {
-        return "lightgreen";
+        if (order === "desc") {
+          return "lightgreen";
+        } else if (order === "asc") {
+          return "orange";
+        }
       }
       if (arrayOfValues.indexOf(value) < 12) {
         return "yellow";
       }
       if (arrayOfValues.indexOf(value) < 16) {
-        return "orange";
+        if (order === "desc") {
+          return "orange";
+        } else if (order === "asc") {
+          return "lightgreen";
+        }
       }
       if (arrayOfValues.indexOf(value) < 20) {
-        return "red";
+        if (order === "desc") {
+          return "red";
+        } else if (order === "asc") {
+          return "green";
+        }
       }
     }
 
@@ -250,7 +358,7 @@ export default {
       sortValues("xG");
     });
 
-    return { teamsList, sortedTeams, sortColumn, colorCells };
+    return { teamsList, sortedTeams, sortColumn, colorCells, activeHeader };
   },
 };
 </script>
@@ -261,19 +369,36 @@ th {
   text-align: center;
 }
 
+th {
+  vertical-align: middle;
+}
+
+.teams-table thead tr th:hover {
+  cursor: pointer;
+}
+
 .green {
-  background-color: green;
+  background-color: #80bd76;
 }
 .red {
-  background-color: red;
+  background-color: #fb4b4b;
 }
 .yellow {
-  background-color: yellow;
+  background-color: #ffefde;
 }
 .lightgreen {
-  background-color: lightgreen;
+  background-color: #abcc88;
 }
 .orange {
-  background-color: orange;
+  background-color: #ffb21f;
+}
+.active-header {
+  text-decoration: underline;
+  color: #0b5394;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
 }
 </style>

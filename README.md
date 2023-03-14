@@ -1,29 +1,24 @@
-# fpl-data-app
+# FPL Data App
 
-This template should help get you started developing with Vue 3 in Vite.
+## Table of contents
 
-## Recommended IDE Setup
+- [General info](#general-info)
+- [Technologies](#technologies)
+- [Live preview](#live-preview)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## General info
 
-## Customize configuration
+This app is designed to help you with managing your team in Fantasy Premier League. It provides user with in-depth teams' and players' data to make more conscious and number-based choices throughout the season.
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Technologies
 
-## Project Setup
+Project is created with:
 
-```sh
-npm install
-```
+- Vue 3.2.47
+- Vue Router 4.1.6
+- Bootstrap 5.2.3
+- Python 3
 
-### Compile and Hot-Reload for Development
+## Live preview
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+Live preview will be soon available at https://szymonp1992.github.io/fpl-data-app/

@@ -1,5 +1,6 @@
 <template>
   <div class="container mt-4">
+    <h2>Team stats</h2>
     <table class="table table-striped table-bordered border-light teams-table">
       <thead>
         <tr class="table-secondary">
@@ -154,7 +155,7 @@ export default {
 
     // Variables keeping track of what column are we sorting and in which direction
     const currentSort = ref("name");
-    const currentSortDir = ref("desc");
+    const currentSortDir = ref("asc");
 
     // Active header name to be updated to show which column dictates the sorting
     const activeHeader = ref("name-header");
@@ -355,7 +356,6 @@ export default {
     // onMounted we launch loadTeamsData function and we wait for the result that will be displayed with a v-for directive as a list
     onMounted(async () => {
       await loadTeamsData();
-      sortValues("xG");
     });
 
     return { teamsList, sortedTeams, sortColumn, colorCells, activeHeader };
@@ -364,6 +364,10 @@ export default {
 </script>
 
 <style scoped>
+table {
+  table-layout: fixed;
+  width: 100%;
+}
 td,
 th {
   text-align: center;
@@ -395,10 +399,5 @@ th {
 .active-header {
   text-decoration: underline;
   color: #0b5394;
-}
-
-table {
-  table-layout: fixed;
-  width: 100%;
 }
 </style>

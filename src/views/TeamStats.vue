@@ -362,8 +362,11 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+.container {
+  min-width: 940px;
+}
+
 table {
   table-layout: fixed;
   width: 100%;
@@ -371,10 +374,14 @@ table {
 td,
 th {
   text-align: center;
+  vertical-align: middle;
+  word-break: break-word;
+  hyphens: auto;
+  font-size: 0.9rem;
 }
 
-th {
-  vertical-align: middle;
+.wide {
+  width: 12.5%;
 }
 
 .teams-table thead tr th:hover {
@@ -399,5 +406,6 @@ th {
 .active-header {
   text-decoration: underline;
   color: #0b5394;
+  background-color: #ffe8a2;
 }
 </style>

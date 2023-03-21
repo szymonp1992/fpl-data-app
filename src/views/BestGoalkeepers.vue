@@ -98,6 +98,14 @@
             </th>
             <th
               scope="col"
+              @click="sortColumn('total_points')"
+              id="points-header"
+              :class="activeHeader === 'points-header' ? 'active-header' : ''"
+            >
+              Points
+            </th>
+            <th
+              scope="col"
               @click="sortColumn('clean_sheets')"
               id="cs-header"
               :class="activeHeader === 'cs-header' ? 'active-header' : ''"
@@ -201,7 +209,7 @@
               id="xpnext-header"
               :class="activeHeader === 'xpnext-header' ? 'active-header' : ''"
             >
-              xPts (next game)
+              xPts (next GW)
             </th>
           </tr>
         </thead>
@@ -214,6 +222,9 @@
             <td>{{ goalkeeper.team_name }}</td>
             <td>
               {{ goalkeeper.minutes }}
+            </td>
+            <td :class="colorCells('points', goalkeeper.total_points, 'desc')">
+              {{ goalkeeper.total_points }}
             </td>
             <td
               :class="
@@ -341,9 +352,9 @@ export default {
     const goalkeepersList = ref([]);
     const goalkeepersListFiltered = ref([]);
 
-    const activeHeader = ref("name");
+    const activeHeader = ref("points-header");
 
-    const currentSort = ref("minutes");
+    const currentSort = ref("total_points");
     const currentSortDir = ref("desc");
 
     const currentFilter = ref("allRadio");

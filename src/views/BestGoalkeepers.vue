@@ -339,6 +339,7 @@ import { ref, onMounted, computed } from "vue";
 export default {
   setup() {
     const goalkeepersList = ref([]);
+    const goalkeepersListFiltered = ref([]);
 
     const activeHeader = ref("name");
 
@@ -348,7 +349,7 @@ export default {
     const currentFilter = ref("allRadio");
 
     const sortedPlayers = computed(() => {
-      return goalkeepersList.value.sort((a, b) => {
+      return goalkeepersListFiltered.value.sort((a, b) => {
         let modifier = 1;
         if (currentSortDir.value === "desc") modifier = -1;
         if (
@@ -412,6 +413,7 @@ export default {
         goalkeeper.team_name = matchedTeam.teamName;
       });
       goalkeepersList.value = goalkeepers;
+      goalkeepersListFiltered.value = goalkeepers;
     }
 
     // Function to recognize when we are sorting by the same column and flip direction
@@ -437,9 +439,16 @@ export default {
     }
 
     function filterByMinMinutes(event) {
-      goalkeepersList.value = goalkeepersList.value.filter((player) => {
-        return player.minutes >= parseInt(event.target.value);
-      });
+      console.log(event.target.value);
+      if (!event.target.value) {
+        goalkeepersListFiltered.value = goalkeepersList.value;
+      } else {
+        goalkeepersListFiltered.value = goalkeepersList.value.filter(
+          (player) => {
+            return player.minutes >= parseInt(event.target.value);
+          }
+        );
+      }
     }
 
     function onRadioChange(radio) {

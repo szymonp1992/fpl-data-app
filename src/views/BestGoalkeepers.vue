@@ -192,25 +192,6 @@
             >
               xGC per 90
             </th>
-            <th
-              scope="col"
-              @click="sortColumn('expected_goal_involvements')"
-              id="xgi-header"
-              :class="activeHeader === 'xgi-header' ? 'active-header' : ''"
-              :style="{
-                display: currentFilter === 'per90Radio' ? 'none' : '',
-              }"
-            >
-              xGI
-            </th>
-            <th
-              scope="col"
-              @click="sortColumn('ep_next')"
-              id="xpnext-header"
-              :class="activeHeader === 'xpnext-header' ? 'active-header' : ''"
-            >
-              xPts (next GW)
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -223,119 +204,84 @@
             <td>
               {{ goalkeeper.minutes }}
             </td>
-            <td :class="colorCells('points', goalkeeper.total_points, 'desc')">
+            <td
+            :style="{
+                backgroundColor: colorCells('total_points', goalkeeper.total_points, 'desc'),
+                border: borderForTopThree('total_points', goalkeeper.total_points, 'desc'),
+              }">
               {{ goalkeeper.total_points }}
             </td>
             <td
-              :class="
-                colorCells('clean_sheets', goalkeeper.clean_sheets, 'desc')
-              "
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
+                backgroundColor: colorCells('clean_sheets', goalkeeper.clean_sheets, 'desc'),
+                border: borderForTopThree('clean_sheets', goalkeeper.clean_sheets, 'desc'),
               }"
             >
               {{ goalkeeper.clean_sheets }}
             </td>
             <td
-              :class="
-                colorCells(
-                  'clean_sheets_per_90',
-                  goalkeeper.clean_sheets_per_90,
-                  'desc'
-                )
-              "
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
+                backgroundColor: colorCells('clean_sheets_per_90', goalkeeper.clean_sheets_per_90, 'desc'),
+                border: borderForTopThree('clean_sheets_per_90', goalkeeper.clean_sheets_per_90, 'desc'),
               }"
             >
               {{ goalkeeper.clean_sheets_per_90 }}
             </td>
             <td
-              :class="
-                colorCells('goals_conceded', goalkeeper.goals_conceded, 'asc')
-              "
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
+                backgroundColor: colorCells('goals_conceded', goalkeeper.goals_conceded, 'asc'),
+                border: borderForTopThree('goals_conceded', goalkeeper.goals_conceded, 'asc'),
               }"
             >
               {{ goalkeeper.goals_conceded }}
             </td>
             <td
-              :class="
-                colorCells(
-                  'goals_conceded_per_90',
-                  goalkeeper.goals_conceded_per_90,
-                  'asc'
-                )
-              "
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
+                backgroundColor: colorCells('goals_conceded_per_90', goalkeeper.goals_conceded_per_90, 'asc'),
+                border: borderForTopThree('goals_conceded_per_90', goalkeeper.goals_conceded_per_90, 'asc'),
               }"
             >
               {{ goalkeeper.goals_conceded_per_90 }}
             </td>
             <td
-              :class="colorCells('saves', goalkeeper.saves, 'desc')"
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
+                backgroundColor: colorCells('saves', goalkeeper.saves, 'desc'),
+                border: borderForTopThree('saves', goalkeeper.saves, 'desc'),
               }"
             >
               {{ goalkeeper.saves }}
             </td>
             <td
-              :class="
-                colorCells('saves_per_90', goalkeeper.saves_per_90, 'desc')
-              "
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
+                backgroundColor: colorCells('saves_per_90', goalkeeper.saves_per_90, 'desc'),
+                border: borderForTopThree('saves_per_90', goalkeeper.saves_per_90, 'desc'),
               }"
             >
               {{ goalkeeper.saves_per_90 }}
             </td>
             <td
-              :class="
-                colorCells(
-                  'expected_goals_conceded',
-                  goalkeeper.expected_goals_conceded,
-                  'asc'
-                )
-              "
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
+                backgroundColor: colorCells('expected_goals_conceded', goalkeeper.expected_goals_conceded, 'asc'),
+                border: borderForTopThree('expected_goals_conceded', goalkeeper.expected_goals_conceded, 'asc'),
               }"
             >
               {{ goalkeeper.expected_goals_conceded }}
             </td>
             <td
-              :class="
-                colorCells(
-                  'expected_goals_conceded_per_90',
-                  goalkeeper.expected_goals_conceded_per_90,
-                  'asc'
-                )
-              "
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
+                backgroundColor: colorCells('expected_goals_conceded_per_90', goalkeeper.expected_goals_conceded_per_90, 'asc'),
+                border: borderForTopThree('expected_goals_conceded_per_90', goalkeeper.expected_goals_conceded_per_90, 'asc'),
               }"
             >
               {{ goalkeeper.expected_goals_conceded_per_90 }}
-            </td>
-            <td
-              :class="
-                colorCells(
-                  'expected_goal_involvements',
-                  goalkeeper.expected_goal_involvements,
-                  'desc'
-                )
-              "
-              :style="{
-                display: currentFilter === 'per90Radio' ? 'none' : '',
-              }"
-            >
-              {{ goalkeeper.expected_goal_involvements }}
-            </td>
-            <td :class="colorCells('ep_next', goalkeeper.ep_next, 'desc')">
-              {{ goalkeeper.ep_next }}
             </td>
           </tr>
         </tbody>
@@ -438,13 +384,17 @@ export default {
     }
 
     // Sorter for values in the table enabling colorCells function to get arrays of all values in a column
-    function sortValues(prop) {
+    function sortValues(prop, order) {
       const arr = [];
       sortedPlayers.value.forEach((player) => {
         arr.push(player[prop]);
       });
       arr.sort(function (a, b) {
-        return b - a;
+        if (order === "desc") {
+        return b - a;}
+        if (order === "asc") {
+          return a - b;
+        }
       });
       return arr;
     }
@@ -467,37 +417,19 @@ export default {
     }
 
     function colorCells(prop, value, order) {
-      const arrayOfValues = sortValues(prop);
+      const arrayOfValues = sortValues(prop, order);
       const uniqueValues = [...new Set(arrayOfValues)];
-      if (uniqueValues.indexOf(value) < 2) {
-        if (order === "desc") {
-          return "green";
-        } else if (order === "asc") {
-          return "red";
-        }
+      const index = uniqueValues.indexOf(value);
+      const greenOpacity = 1 - index * (1 / uniqueValues.length);
+      return `rgba(0,130,0,${greenOpacity})`
+    }
+
+    function borderForTopThree(prop, value, order) {
+      const arrayOfValues = sortValues(prop, order);
+      const index = arrayOfValues.indexOf(value);
+      if (index < 3) {
+        return '2px solid yellow'
       }
-      if (uniqueValues.indexOf(value) < 5) {
-        if (order === "desc") {
-          return "lightgreen";
-        } else if (order === "asc") {
-          return "orange";
-        }
-      }
-      if (uniqueValues.indexOf(value) > uniqueValues.length - 3) {
-        if (order === "desc") {
-          return "red";
-        } else if (order === "asc") {
-          return "green";
-        }
-      }
-      if (uniqueValues.indexOf(value) > uniqueValues.length - 6) {
-        if (order === "desc") {
-          return "orange";
-        } else if (order === "asc") {
-          return "lightgreen";
-        }
-      }
-      return "yellow";
     }
 
     onMounted(async () => {
@@ -510,6 +442,7 @@ export default {
       activeHeader,
       sortedPlayers,
       colorCells,
+      borderForTopThree,
       maxMinutesPlayed,
       filterByMinMinutes,
       onRadioChange,

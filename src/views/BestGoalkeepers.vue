@@ -72,7 +72,7 @@
           <tr class="table-secondary">
             <th
               scope="col"
-              @click="sortColumn('second_name')"
+              @click="sortColumn('web_name')"
               id="name-header"
               :class="activeHeader === 'name-header' ? 'active-header' : ''"
             >
@@ -197,8 +197,7 @@
         <tbody>
           <tr v-for="goalkeeper in sortedPlayers" :key="goalkeeper.id">
             <td>
-              {{ goalkeeper.first_name }}
-              <strong>{{ goalkeeper.second_name }}</strong>
+              {{ goalkeeper.display_name }}
             </td>
             <td>{{ goalkeeper.team_name }}</td>
             <td>
@@ -310,7 +309,7 @@ export default {
         let modifier = 1;
         if (currentSortDir.value === "desc") modifier = -1;
         if (
-          currentSort.value == "second_name" ||
+          currentSort.value == "web_name" ||
           currentSort.value == "team_name"
         ) {
           if (a[currentSort.value] < b[currentSort.value]) return -1 * modifier;
@@ -368,6 +367,13 @@ export default {
         });
         // Appending team_name property to every goalkeeper object
         goalkeeper.team_name = matchedTeam.teamName;
+        let goalkeeperDisplayName
+        if (goalkeeper.second_name !== goalkeeper.web_name) {
+          goalkeeperDisplayName = goalkeeper.web_name
+        } else {
+          goalkeeperDisplayName = `${goalkeeper.first_name} ${goalkeeper.second_name}`
+        }
+        goalkeeper.display_name = goalkeeperDisplayName
       });
       goalkeepersList.value = goalkeepers;
       goalkeepersListFiltered.value = goalkeepers;
@@ -467,7 +473,7 @@ th {
   vertical-align: middle;
   word-break: break-word;
   hyphens: auto;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
 }
 
 .wide {

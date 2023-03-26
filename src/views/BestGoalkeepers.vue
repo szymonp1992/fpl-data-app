@@ -16,8 +16,26 @@
               id="minutes-played-input"
               min="0"
               :max="maxMinutesPlayed"
-              @input.prevent="filterByMinMinutes"
-              :placeholder="0"
+              @input.prevent="filterByMinMinutesAndMaxPrice"
+              v-model="minMinutesPlayed"
+              class="form-control"
+            />
+          </div>
+          <div class="input-group mt-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm"
+                >Max. price</span
+              >
+            </div>
+            <input
+              type="number"
+              name="maximum-price-input"
+              id="maximum-price-input"
+              :min="minPrice"
+              :max="maxPrice"
+              v-model="maxPlayerPrice"
+              @input.prevent="filterByMinMinutesAndMaxPrice"
+              step="0.1"
               class="form-control"
             />
           </div>
@@ -87,6 +105,14 @@
               "
             >
               Team
+            </th>
+            <th
+              scope="col"
+              @click="sortColumn('now_cost')"
+              id="price-header"
+              :class="activeHeader === 'price-header' ? 'active-header' : ''"
+            >
+              Price
             </th>
             <th
               scope="col"
@@ -200,21 +226,39 @@
               {{ goalkeeper.display_name }}
             </td>
             <td>{{ goalkeeper.team_name }}</td>
+            <td>{{ (goalkeeper.now_cost / 10).toFixed(1) }}</td>
             <td>
               {{ goalkeeper.minutes }}
             </td>
             <td
-            :style="{
-                backgroundColor: colorCells('total_points', goalkeeper.total_points, 'desc'),
-                border: borderForTopThree('total_points', goalkeeper.total_points, 'desc'),
-              }">
+              :style="{
+                backgroundColor: colorCells(
+                  'total_points',
+                  goalkeeper.total_points,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'total_points',
+                  goalkeeper.total_points,
+                  'desc'
+                ),
+              }"
+            >
               {{ goalkeeper.total_points }}
             </td>
             <td
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
-                backgroundColor: colorCells('clean_sheets', goalkeeper.clean_sheets, 'desc'),
-                border: borderForTopThree('clean_sheets', goalkeeper.clean_sheets, 'desc'),
+                backgroundColor: colorCells(
+                  'clean_sheets',
+                  goalkeeper.clean_sheets,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'clean_sheets',
+                  goalkeeper.clean_sheets,
+                  'desc'
+                ),
               }"
             >
               {{ goalkeeper.clean_sheets }}
@@ -222,8 +266,16 @@
             <td
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
-                backgroundColor: colorCells('clean_sheets_per_90', goalkeeper.clean_sheets_per_90, 'desc'),
-                border: borderForTopThree('clean_sheets_per_90', goalkeeper.clean_sheets_per_90, 'desc'),
+                backgroundColor: colorCells(
+                  'clean_sheets_per_90',
+                  goalkeeper.clean_sheets_per_90,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'clean_sheets_per_90',
+                  goalkeeper.clean_sheets_per_90,
+                  'desc'
+                ),
               }"
             >
               {{ goalkeeper.clean_sheets_per_90 }}
@@ -231,8 +283,16 @@
             <td
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
-                backgroundColor: colorCells('goals_conceded', goalkeeper.goals_conceded, 'asc'),
-                border: borderForTopThree('goals_conceded', goalkeeper.goals_conceded, 'asc'),
+                backgroundColor: colorCells(
+                  'goals_conceded',
+                  goalkeeper.goals_conceded,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'goals_conceded',
+                  goalkeeper.goals_conceded,
+                  'asc'
+                ),
               }"
             >
               {{ goalkeeper.goals_conceded }}
@@ -240,8 +300,16 @@
             <td
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
-                backgroundColor: colorCells('goals_conceded_per_90', goalkeeper.goals_conceded_per_90, 'asc'),
-                border: borderForTopThree('goals_conceded_per_90', goalkeeper.goals_conceded_per_90, 'asc'),
+                backgroundColor: colorCells(
+                  'goals_conceded_per_90',
+                  goalkeeper.goals_conceded_per_90,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'goals_conceded_per_90',
+                  goalkeeper.goals_conceded_per_90,
+                  'asc'
+                ),
               }"
             >
               {{ goalkeeper.goals_conceded_per_90 }}
@@ -258,8 +326,16 @@
             <td
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
-                backgroundColor: colorCells('saves_per_90', goalkeeper.saves_per_90, 'desc'),
-                border: borderForTopThree('saves_per_90', goalkeeper.saves_per_90, 'desc'),
+                backgroundColor: colorCells(
+                  'saves_per_90',
+                  goalkeeper.saves_per_90,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'saves_per_90',
+                  goalkeeper.saves_per_90,
+                  'desc'
+                ),
               }"
             >
               {{ goalkeeper.saves_per_90 }}
@@ -267,8 +343,16 @@
             <td
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
-                backgroundColor: colorCells('expected_goals_conceded', goalkeeper.expected_goals_conceded, 'asc'),
-                border: borderForTopThree('expected_goals_conceded', goalkeeper.expected_goals_conceded, 'asc'),
+                backgroundColor: colorCells(
+                  'expected_goals_conceded',
+                  goalkeeper.expected_goals_conceded,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'expected_goals_conceded',
+                  goalkeeper.expected_goals_conceded,
+                  'asc'
+                ),
               }"
             >
               {{ goalkeeper.expected_goals_conceded }}
@@ -276,8 +360,16 @@
             <td
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
-                backgroundColor: colorCells('expected_goals_conceded_per_90', goalkeeper.expected_goals_conceded_per_90, 'asc'),
-                border: borderForTopThree('expected_goals_conceded_per_90', goalkeeper.expected_goals_conceded_per_90, 'asc'),
+                backgroundColor: colorCells(
+                  'expected_goals_conceded_per_90',
+                  goalkeeper.expected_goals_conceded_per_90,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'expected_goals_conceded_per_90',
+                  goalkeeper.expected_goals_conceded_per_90,
+                  'asc'
+                ),
               }"
             >
               {{ goalkeeper.expected_goals_conceded_per_90 }}
@@ -303,6 +395,12 @@ export default {
     const currentSortDir = ref("desc");
 
     const currentFilter = ref("allRadio");
+
+    const minMinutesPlayed = ref(0);
+
+    const maxPrice = ref(undefined);
+    const minPrice = ref(undefined);
+    const maxPlayerPrice = ref(undefined);
 
     const sortedPlayers = computed(() => {
       return goalkeepersListFiltered.value.sort((a, b) => {
@@ -367,13 +465,13 @@ export default {
         });
         // Appending team_name property to every goalkeeper object
         goalkeeper.team_name = matchedTeam.teamName;
-        let goalkeeperDisplayName
+        let goalkeeperDisplayName;
         if (goalkeeper.second_name !== goalkeeper.web_name) {
-          goalkeeperDisplayName = goalkeeper.web_name
+          goalkeeperDisplayName = goalkeeper.web_name;
         } else {
-          goalkeeperDisplayName = `${goalkeeper.first_name} ${goalkeeper.second_name}`
+          goalkeeperDisplayName = `${goalkeeper.first_name} ${goalkeeper.second_name}`;
         }
-        goalkeeper.display_name = goalkeeperDisplayName
+        goalkeeper.display_name = goalkeeperDisplayName;
       });
       goalkeepersList.value = goalkeepers;
       goalkeepersListFiltered.value = goalkeepers;
@@ -389,6 +487,22 @@ export default {
       currentSort.value = s;
     }
 
+    function getMinAndMaxPrice() {
+      let minPlPrice = 20.0;
+      let maxPlPrice = 0.0;
+      sortedPlayers.value.forEach((player) => {
+        if (player.now_cost / 10 > maxPlPrice) {
+          maxPlPrice = player.now_cost / 10;
+        }
+        if (player.now_cost / 10 < minPlPrice) {
+          minPlPrice = player.now_cost / 10;
+        }
+      });
+      minPrice.value = minPlPrice;
+      maxPrice.value = maxPlPrice;
+      maxPlayerPrice.value = maxPlPrice;
+    }
+
     // Sorter for values in the table enabling colorCells function to get arrays of all values in a column
     function sortValues(prop, order) {
       const arr = [];
@@ -397,7 +511,8 @@ export default {
       });
       arr.sort(function (a, b) {
         if (order === "desc") {
-        return b - a;}
+          return b - a;
+        }
         if (order === "asc") {
           return a - b;
         }
@@ -405,17 +520,18 @@ export default {
       return arr;
     }
 
-    function filterByMinMinutes(event) {
-      console.log(event.target.value);
-      if (!event.target.value) {
-        goalkeepersListFiltered.value = goalkeepersList.value;
-      } else {
-        goalkeepersListFiltered.value = goalkeepersList.value.filter(
-          (player) => {
-            return player.minutes >= parseInt(event.target.value);
-          }
-        );
-      }
+    function filterByMinMinutesAndMaxPrice(event) {
+      console.log(minMinutesPlayed.value, maxPlayerPrice.value);
+      console.log(goalkeepersListFiltered.value);
+      console.log(goalkeepersList);
+      goalkeepersListFiltered.value = goalkeepersList.value.filter(
+        (goalkeeper) => {
+          return (
+            goalkeeper.now_cost / 10 <= maxPlayerPrice.value &&
+            goalkeeper.minutes >= minMinutesPlayed.value
+          );
+        }
+      );
     }
 
     function onRadioChange(radio) {
@@ -427,19 +543,20 @@ export default {
       const uniqueValues = [...new Set(arrayOfValues)];
       const index = uniqueValues.indexOf(value);
       const greenOpacity = 1 - index * (1 / uniqueValues.length);
-      return `rgba(0,130,0,${greenOpacity})`
+      return `rgba(0,130,0,${greenOpacity})`;
     }
 
     function borderForTopThree(prop, value, order) {
       const arrayOfValues = sortValues(prop, order);
       const index = arrayOfValues.indexOf(value);
       if (index < 3) {
-        return '2px solid yellow'
+        return "2px solid yellow";
       }
     }
 
     onMounted(async () => {
       await loadGoalkeepersData();
+      getMinAndMaxPrice();
     });
 
     return {
@@ -450,9 +567,13 @@ export default {
       colorCells,
       borderForTopThree,
       maxMinutesPlayed,
-      filterByMinMinutes,
+      filterByMinMinutesAndMaxPrice,
       onRadioChange,
       currentFilter,
+      minMinutesPlayed,
+      maxPrice,
+      minPrice,
+      maxPlayerPrice,
     };
   },
 };
@@ -477,7 +598,7 @@ th {
 }
 
 .wide {
-  width: 12.5%;
+  width: 10%;
 }
 
 .teams-table thead tr th:hover {

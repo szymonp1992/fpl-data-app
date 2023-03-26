@@ -284,7 +284,6 @@ export default {
       const teamsUnderstat = Object.values(dataUnderstat).sort(
         sortUnderstatAlphabetically
       );
-
       // Variables that will get updated iterating over every game a team has played in current season
       let xG = 0;
       let xGA = 0;
@@ -377,11 +376,11 @@ th {
   vertical-align: middle;
   word-break: break-word;
   hyphens: auto;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
 }
 
 .wide {
-  width: 12.5%;
+  width: 10%;
 }
 
 .teams-table thead tr th:hover {

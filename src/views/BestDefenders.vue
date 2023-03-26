@@ -90,6 +90,14 @@
             </th>
             <th
               scope="col"
+              @click="sortColumn('now_cost')"
+              id="price-header"
+              :class="activeHeader === 'price-header' ? 'active-header' : ''"
+            >
+              Price
+            </th>
+            <th
+              scope="col"
               @click="sortColumn('minutes')"
               id="minutes-header"
               :class="activeHeader === 'minutes-header' ? 'active-header' : ''"
@@ -194,27 +202,49 @@
               {{ defender.display_name }}
             </td>
             <td>{{ defender.team_name }}</td>
+            <td>{{ defender.now_cost / 10 }}</td>
             <td>
               {{ defender.minutes }}
             </td>
             <td
-            :style="{
-                backgroundColor: colorCells('total_points', defender.total_points, 'desc'),
-                border: borderForTopThree('total_points', defender.total_points, 'desc'),
-              }">
+              :style="{
+                backgroundColor: colorCells(
+                  'total_points',
+                  defender.total_points,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'total_points',
+                  defender.total_points,
+                  'desc'
+                ),
+              }"
+            >
               {{ defender.total_points }}
             </td>
             <td
               :style="{
-                backgroundColor: colorCells('goals_scored', defender.goals_scored, 'desc'),
-                border: borderForTopThree('goals_scored', defender.goals_scored, 'desc'),
+                backgroundColor: colorCells(
+                  'goals_scored',
+                  defender.goals_scored,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'goals_scored',
+                  defender.goals_scored,
+                  'desc'
+                ),
               }"
             >
               {{ defender.goals_scored }}
             </td>
             <td
               :style="{
-                backgroundColor: colorCells('assists', defender.assists, 'desc'),
+                backgroundColor: colorCells(
+                  'assists',
+                  defender.assists,
+                  'desc'
+                ),
                 border: borderForTopThree('assists', defender.assists, 'desc'),
               }"
             >
@@ -223,8 +253,16 @@
             <td
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
-                backgroundColor: colorCells('clean_sheets', defender.clean_sheets, 'desc'),
-                border: borderForTopThree('clean_sheets', defender.clean_sheets, 'desc'),
+                backgroundColor: colorCells(
+                  'clean_sheets',
+                  defender.clean_sheets,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'clean_sheets',
+                  defender.clean_sheets,
+                  'desc'
+                ),
               }"
             >
               {{ defender.clean_sheets }}
@@ -232,8 +270,16 @@
             <td
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
-                backgroundColor: colorCells('clean_sheets_per_90', defender.clean_sheets_per_90, 'desc'),
-                border: borderForTopThree('clean_sheets_per_90', defender.clean_sheets_per_90, 'desc'),
+                backgroundColor: colorCells(
+                  'clean_sheets_per_90',
+                  defender.clean_sheets_per_90,
+                  'desc'
+                ),
+                border: borderForTopThree(
+                  'clean_sheets_per_90',
+                  defender.clean_sheets_per_90,
+                  'desc'
+                ),
               }"
             >
               {{ defender.clean_sheets_per_90 }}
@@ -241,8 +287,16 @@
             <td
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
-                backgroundColor: colorCells('goals_conceded', defender.goals_conceded, 'asc'),
-                border: borderForTopThree('goals_conceded', defender.goals_conceded, 'asc'),
+                backgroundColor: colorCells(
+                  'goals_conceded',
+                  defender.goals_conceded,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'goals_conceded',
+                  defender.goals_conceded,
+                  'asc'
+                ),
               }"
             >
               {{ defender.goals_conceded }}
@@ -250,8 +304,16 @@
             <td
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
-                backgroundColor: colorCells('goals_conceded_per_90', defender.goals_conceded_per_90, 'asc'),
-                border: borderForTopThree('goals_conceded_per_90', defender.goals_conceded_per_90, 'asc'),
+                backgroundColor: colorCells(
+                  'goals_conceded_per_90',
+                  defender.goals_conceded_per_90,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'goals_conceded_per_90',
+                  defender.goals_conceded_per_90,
+                  'asc'
+                ),
               }"
             >
               {{ defender.goals_conceded_per_90 }}
@@ -259,8 +321,16 @@
             <td
               :style="{
                 display: currentFilter === 'per90Radio' ? 'none' : '',
-                backgroundColor: colorCells('expected_goals_conceded', defender.expected_goals_conceded, 'asc'),
-                border: borderForTopThree('expected_goals_conceded', defender.expected_goals_conceded, 'asc'),
+                backgroundColor: colorCells(
+                  'expected_goals_conceded',
+                  defender.expected_goals_conceded,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'expected_goals_conceded',
+                  defender.expected_goals_conceded,
+                  'asc'
+                ),
               }"
             >
               {{ defender.expected_goals_conceded }}
@@ -268,8 +338,16 @@
             <td
               :style="{
                 display: currentFilter === 'allSeasonRadio' ? 'none' : '',
-                backgroundColor: colorCells('expected_goals_conceded_per_90', defender.expected_goals_conceded_per_90, 'asc'),
-                border: borderForTopThree('expected_goals_conceded_per_90', defender.expected_goals_conceded_per_90, 'asc'),
+                backgroundColor: colorCells(
+                  'expected_goals_conceded_per_90',
+                  defender.expected_goals_conceded_per_90,
+                  'asc'
+                ),
+                border: borderForTopThree(
+                  'expected_goals_conceded_per_90',
+                  defender.expected_goals_conceded_per_90,
+                  'asc'
+                ),
               }"
             >
               {{ defender.expected_goals_conceded_per_90 }}
@@ -359,13 +437,13 @@ export default {
         });
         // Appending team_name property to every defender object
         defender.team_name = matchedTeam.teamName;
-        let defenderDisplayName
+        let defenderDisplayName;
         if (defender.second_name !== defender.web_name) {
-          defenderDisplayName = defender.web_name
+          defenderDisplayName = defender.web_name;
         } else {
-          defenderDisplayName = `${defender.first_name} ${defender.second_name}`
+          defenderDisplayName = `${defender.first_name} ${defender.second_name}`;
         }
-        defender.display_name = defenderDisplayName
+        defender.display_name = defenderDisplayName;
       });
       defendersList.value = defenders;
       defendersListFiltered.value = defenders;
@@ -389,7 +467,8 @@ export default {
       });
       arr.sort(function (a, b) {
         if (order === "desc") {
-        return b - a;}
+          return b - a;
+        }
         if (order === "asc") {
           return a - b;
         }
@@ -402,11 +481,9 @@ export default {
       if (!event.target.value) {
         defendersListFiltered.value = defendersList.value;
       } else {
-        defendersListFiltered.value = defendersList.value.filter(
-          (player) => {
-            return player.minutes >= parseInt(event.target.value);
-          }
-        );
+        defendersListFiltered.value = defendersList.value.filter((player) => {
+          return player.minutes >= parseInt(event.target.value);
+        });
       }
     }
 
@@ -419,14 +496,14 @@ export default {
       const uniqueValues = [...new Set(arrayOfValues)];
       const index = uniqueValues.indexOf(value);
       const greenOpacity = 1 - index * (1 / uniqueValues.length);
-      return `rgba(0,130,0,${greenOpacity})`
+      return `rgba(0,130,0,${greenOpacity})`;
     }
 
     function borderForTopThree(prop, value, order) {
       const arrayOfValues = sortValues(prop, order);
       const index = arrayOfValues.indexOf(value);
       if (index < 3) {
-        return '2px solid yellow'
+        return "2px solid yellow";
       }
     }
 

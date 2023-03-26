@@ -520,10 +520,7 @@ export default {
       return arr;
     }
 
-    function filterByMinMinutesAndMaxPrice(event) {
-      console.log(minMinutesPlayed.value, maxPlayerPrice.value);
-      console.log(goalkeepersListFiltered.value);
-      console.log(goalkeepersList);
+    function filterByMinMinutesAndMaxPrice() {
       goalkeepersListFiltered.value = goalkeepersList.value.filter(
         (goalkeeper) => {
           return (
